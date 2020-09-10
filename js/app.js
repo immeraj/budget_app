@@ -15,4 +15,86 @@ class UI {
     this.itemList = [];
     this.itemID = 0;
   }
+
+    submitBudgetForm(){
+      const value = this.budgetInput.value;
+      if(value=='' || value<0){
+        this.budgetFeedback.classList.add('showItem');
+        this.budgetFeedback.innerHTML='<p>value can not be empty or negative</p>';
+        const self=this;
+
+        setTimeout(function(){
+           self.budgetFeedback.classList.remove('showItem');
+        },4000);
+      }
+
+      else{
+        this.budgetAmount.textContent= value;
+        this.budgetInput.value="";
+        this.showBalance();
+
+      }
+    }
+
+    //show balance
+    showBalance(){
+      const expense= this.totalExpense();
+      const total= parseInt(this.budgetAmount.textContent) - expense;
+      this.balanceAmount.textContent= total;
+      if(total<0){
+        this.balance.classList.remove('showGreen','showBlack');
+        this.balance.classList.add("showRed");
+      }
+      else if(total>0){
+        this.balance.classList.remove('showRed','showBlack');
+        this.balance.classList.add("showGreen");
+      }
+      else if(total==0){
+        this.balance.classList.remove('showRed','showGreen');
+        this.balance.classList.add("showBlack");
+      }
+    }
+
+
+    //submit expense form
+    
+    //total expense
+    totalExpense(){
+      let total= 400;
+      return total;
+    }
+
 }
+
+
+function eventListeners(){
+  const budgetForm= document.getElementById('budget-form');
+  const expenseForm= document.getElementById('expense-form');
+  const expenseList= document.getElementById('expense-list');
+
+  //new instance of UI class
+  const ui= new UI() 
+
+  //submit for budget form
+  budgetForm.addEventListener('submit',function(event){
+    event.preventDefault();
+    ui.submitBudgetForm();
+  })
+
+   //expense form submit
+   expenseForm.addEventListener('submit',function(event){
+    event.preventDefault();
+    ui.submitExpenseForm();
+  })
+
+   //expense list
+   expenseList.addEventListener('submit',function(){
+
+  })
+
+
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  eventListeners();
+})
