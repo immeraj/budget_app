@@ -118,13 +118,49 @@ class UI {
 
       if(this.itemList.length>0){
        total =this.itemList.reduce(function(acc,curr){
-        console.log(`this is ${acc} and the value is ${curr.amount}`);
+        
         acc+=curr.amount;
         return acc;
        },0)
       }
       this.expenseAmount.textContent= total;
       return total;
+    }
+    //edit expense
+    editExpense(element){
+      let id= parseInt(element.dataset.id);
+      let parent= element.parentElement.parentElement.parentElement;
+      //remove for dom
+      this.expenseList.removeChild(parent);
+      //remove from the dom
+      let expense= this.itemList.filter(function(item){
+        return item.id==id;
+      })
+
+      //show  value
+      this.expenseInput.value= expense[0].title;
+      this.amountInput.value= expense[0].amount;
+      //remove from list
+      let tempList= this.itemList.filter(function(item){
+        return item.id !==id;
+      })
+      this.itemList=tempList;
+      this.showBalance();
+    }
+
+    //delete expense
+    deleteExpense(element){
+      let id= parseInt(element.dataset.id);
+      let parent= element.parentElement.parentElement.parentElement;
+      //remove for dom
+      this.expenseList.removeChild(parent);
+
+      //remove from list
+      let tempList= this.itemList.filter(function(item){
+        return item.id !==id;
+      })
+      this.itemList=tempList;
+      this.showBalance();
     }
 
 }
@@ -151,9 +187,14 @@ function eventListeners(){
   })
 
    //expense list
-   expenseList.addEventListener('submit',function(){
-
-  })
+   expenseList.addEventListener('click',function(event){
+    if(event.target.parentElement.classList.contains('edit-icon')){
+      ui.editExpense(event.target.parentElement);
+    }
+    else if(event.target.parentElement.classList.contains('delete-icon')){
+      ui.deleteExpense(event.target.parentElement);
+    }
+  });
 
 
 }
